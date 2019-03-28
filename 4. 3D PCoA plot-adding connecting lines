@@ -1,0 +1,34 @@
+#!/bin/bash --login
+#PBS -l walltime=04:00:00
+#PBS -l select=1:ncpus=1
+#PBS -N connectdots
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/vector/
+cd ~/output/vector/
+
+# QIIME code
+
+echo "conecting dots"
+time make_emperor.py \
+    -i ~/cdout/bdiv_even30000/weighted_unifrac_pc.txt \
+    -m ~/mapping_file.tsv \
+    -o ~/vector \
+    --add_vectors Description \
+
+echo "closing environment"
+conda deactivate
+
+### end script
