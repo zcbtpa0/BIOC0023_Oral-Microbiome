@@ -1,0 +1,36 @@
+#!/bin/bash --login
+#PBS -l walltime=04:00:00
+#PBS -l select=1:ncpus=1
+#PBS -N otu_benchm_1c
+#PBS -A d411-training
+#PBS -j oe
+
+### script start
+
+echo "setting temporary directory"
+mkdir -p ~/qiime_tmp
+export TMPDIR=~/qiime_tmp
+
+echo "loading virtual environment"
+conda deactivate
+conda activate qiime1
+
+echo "creating and cd to output directory"
+mkdir -p ~/output/benchmark/
+cd ~/output/benchmark/
+
+# QIIME code
+
+echo "1 core"
+echo "Picking closed reference OTUs"
+echo "Joint Read Dataset"
+time pick_closed_reference_otus.py \
+    -i ~/output/demultiplexing/slout_JointRead/seqs.fna \
+    -o otus \
+    -f -a -O 1
+
+echo "closing environment"
+conda deactivate
+
+### end script
+
